@@ -111,8 +111,10 @@ body::after {
 
 .head {
     grid-area: head;
+    position: relative;
     display: flex;
     align-items: baseline;
+    justify-content: center;
     gap: 0.75rem;
     padding: 0.55rem 0.9rem 0.5rem;
     border-bottom: var(--edge) solid var(--dim);
@@ -120,6 +122,10 @@ body::after {
 }
 
 .head .sigil {
+    position: absolute;
+    left: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
     font-family: var(--fg-display);
     font-size: 0.78rem;
     letter-spacing: 0.22em;
@@ -129,6 +135,8 @@ body::after {
 .head input {
     flex: 1;
     min-width: 0;
+    text-align: center;
+    max-width: calc(100% - 15rem);
     appearance: none;
     border: 0;
     outline: 0;
@@ -489,13 +497,15 @@ body::after {
 }
 
 .frame.home .head .sigil {
+    position: static;
+    transform: none;
     font-size: 1.1rem;
 }
 
 .frame.home .head input {
     flex: 0 1 40rem;
     border-bottom: var(--edge) solid var(--dim);
-    padding-bottom: 0.3rem;
+    padding: 0 0 0.3rem;
 }
 
 .tabs {
