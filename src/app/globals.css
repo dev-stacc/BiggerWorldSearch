@@ -241,7 +241,7 @@ body::after {
     color: var(--yellow);
 }
 
-.tab.filters::after {
+.tab.filters > summary::after {
     content: " ▾";
 }
 
@@ -510,4 +510,130 @@ body::after {
 
 .frame.home .head .caret {
     height: 1.4rem;
+}
+
+.tabs {
+    position: relative;
+}
+
+.tab.filters {
+    padding: 0;
+    background: transparent;
+    clip-path: none;
+}
+
+.tab.filters > summary {
+    display: block;
+    padding: 0.42rem 0.6rem;
+    background: #160405;
+    color: var(--yellow);
+    cursor: pointer;
+    list-style: none;
+    clip-path: polygon(
+        0 0,
+        calc(100% - var(--chamfer)) 0,
+        100% var(--chamfer),
+        100% 100%,
+        var(--chamfer) 100%,
+        0 calc(100% - var(--chamfer))
+    );
+}
+
+.tab.filters > summary::-webkit-details-marker {
+    display: none;
+}
+
+.tab.filters[open] > summary {
+    background: var(--yellow);
+    color: var(--black);
+}
+
+.panel {
+    position: absolute;
+    left: 0.6rem;
+    right: 0.6rem;
+    bottom: calc(100% + 0.4rem);
+    z-index: 40;
+    max-height: 52vh;
+    overflow-y: auto;
+    padding: 0.7rem 0.8rem;
+    border: var(--edge) solid var(--yellow);
+    background: var(--black);
+    font-family: var(--fg-prose);
+    text-align: left;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.panel .row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.8rem;
+    padding: 0.28rem 0;
+    border-bottom: var(--edge) solid #1d0608;
+}
+
+.panel .key {
+    flex: 0 0 9rem;
+    color: var(--dim);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.panel .vals {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+}
+
+.panel .pick {
+    padding: 0.14rem 0.5rem;
+    border: var(--edge) solid var(--dim);
+    color: var(--white);
+    font-size: 0.78rem;
+    cursor: pointer;
+}
+
+.panel .pick:hover {
+    border-color: var(--cyan);
+    color: var(--cyan);
+}
+
+.panel .pick.on {
+    border-color: var(--red);
+    background: var(--red);
+    color: var(--black);
+}
+
+.panel .pick input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.panel input[type="date"] {
+    padding: 0.14rem 0.4rem;
+    border: var(--edge) solid var(--dim);
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--fg-prose);
+    font-size: 0.78rem;
+    color-scheme: dark;
+}
+
+.panel .apply {
+    margin-top: 0.6rem;
+    padding: 0.4rem 1.4rem;
+    border: 0;
+    background: var(--red);
+    color: var(--black);
+    font-family: var(--fg-display);
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    cursor: pointer;
+}
+
+.panel .apply:hover {
+    background: var(--cyan);
 }

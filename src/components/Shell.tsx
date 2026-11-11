@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import type { Vertical } from "@/lib/fourget";
+import Filters from "@/components/Filters";
+import type { FilterDef } from "@/lib/filters";
+import { DEFAULT_SCRAPER, type Vertical } from "@/lib/fourget";
 
 export interface Telemetry {
     elapsedMs: number;
@@ -51,25 +53,42 @@ export default function Shell({
     vertical,
     query,
     telemetry,
+    scraper = DEFAULT_SCRAPER,
+    filterDefs = [],
+    active = {},
     home = false,
     children,
 }: {
     vertical: Vertical;
     query: string;
     telemetry: Telemetry | null;
+    scraper?: string;
+    filterDefs?: FilterDef[];
+    active?: Record<string, string>;
     home?: boolean;
     children?: ReactNode;
 }) {
     const action = vertical === "images" ? "/images" : "/search";
 
+    const carry = (href: string) => {
+        if (!query) {
+            return href;
+        }
+        const params = new URLSearchParams({ q: query, scraper });
+        for (const [key, value] of Object.entries(active)) {
+            params.set(key, value);
+        }
+        return `${href}?${params.toString()}`;
+    };
+
     return (
-        <div className={home ? "frame home" : "frame"}>
+        <form className={home ? "frame home" : "frame"} action={action} method="get">
             <i className="cnr tl" />
             <i className="cnr tr" />
             <i className="cnr bl" />
             <i className="cnr br" />
 
-            <form className="head" action={action} method="get">
+            <div className="head">
                 <span className="sigil">4G//NET</span>
                 <span className="caret" />
                 <input
@@ -80,14 +99,14 @@ export default function Shell({
                     autoComplete="off"
                     autoFocus
                 />
-            </form>
+            </div>
 
             {home ? null : <Rail telemetry={telemetry} />}
 
             {home ? null : <div className="results">{children}</div>}
 
             <div className="tabs">
-                <span className="tab filters">FILTERS</span>
+                <Filters defs={filterDefs} active={active} scraper={scraper} />
                 {TABS.map((tab) => {
                     const className = `tab${tab.vertical === vertical ? " on" : ""}`;
                     if (!WIRED.includes(tab.vertical)) {
@@ -101,17 +120,13 @@ export default function Shell({
                         <Link
                             key={tab.vertical}
                             className={className}
-                            href={
-                                query
-                                    ? `${tab.href}?q=${encodeURIComponent(query)}`
-                                    : tab.href
-                            }
+                            href={carry(tab.href)}
                         >
                             {tab.label}
                         </Link>
                     );
                 })}
             </div>
-        </div>
+        </form>
     );
 }

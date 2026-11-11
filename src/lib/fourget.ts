@@ -68,6 +68,7 @@ export interface SearchQuery {
     s: string;
     scraper?: string;
     npt?: string | null;
+    filters?: Record<string, string>;
 }
 
 export interface SearchOutcome {
@@ -84,6 +85,9 @@ export async function search(
     params.set("scraper", query.scraper ?? DEFAULT_SCRAPER);
     if (query.npt) {
         params.set("npt", query.npt);
+    }
+    for (const [key, value] of Object.entries(query.filters ?? {})) {
+        params.set(key, value);
     }
 
     const started = Date.now();

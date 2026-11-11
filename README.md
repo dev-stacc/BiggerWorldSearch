@@ -8,8 +8,12 @@ Search frontend for the cluster's 4get instance. Queries 4get's versioned
 ```
 nix develop
 npm install
-FOURGET_BASE=https://search.tail789d60.ts.net npm run dev
+kubectl port-forward -n fourget svc/fourget 8099:80 &
+FOURGET_BASE=http://127.0.0.1:8099 npm run dev
 ```
+
+4get has no ingress of its own, so local development needs the port-forward above;
+`search.tail789d60.ts.net` now serves this app, not 4get.
 
 ## Environment
 
