@@ -280,10 +280,10 @@ body::after {
 
 .result .src span {
     position: absolute;
-    bottom: 0.25rem;
+    top: 50%;
     left: 50%;
     writing-mode: vertical-rl;
-    transform: translateX(-50%) rotate(180deg);
+    transform: translate(-50%, -50%) rotate(180deg);
     max-height: calc(100% - 0.5rem);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -496,14 +496,9 @@ body::after {
     background: transparent;
 }
 
-.frame.home .head .sigil {
-    position: static;
-    transform: none;
-    font-size: 1.1rem;
-}
-
 .frame.home .head input {
     flex: 0 1 40rem;
+    max-width: 100%;
     border-bottom: var(--edge) solid var(--dim);
     padding: 0 0 0.3rem;
 }

@@ -90,7 +90,7 @@ export default function Shell({
             <i className="cnr br" />
 
             <div className="head">
-                <span className="sigil">4G//NET</span>
+                {home ? null : <span className="sigil">4G//NET</span>}
                 <input
                     name="q"
                     defaultValue={query}
