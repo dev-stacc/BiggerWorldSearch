@@ -1,3 +1,4 @@
+import Label from "@/components/Label";
 import { SCRAPERS } from "@/lib/fourget";
 import type { FilterDef } from "@/lib/filters";
 
@@ -12,7 +13,9 @@ export default function Filters({
 }) {
     return (
         <details className="tab filters">
-            <summary>FILTERS</summary>
+            <summary>
+                <Label full="FILTERS" abbr="FLTR" />
+            </summary>
             <div className="panel">
                 <div className="row">
                     <span className="key">ENGINE</span>

@@ -20,6 +20,11 @@
 * {
     border-radius: 0 !important;
     box-sizing: border-box;
+    scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+    display: none;
 }
 
 html,
@@ -139,25 +144,11 @@ body::after {
     color: var(--dim);
 }
 
-.head .caret {
-    width: 0.62rem;
-    height: 1.15rem;
-    background: var(--cyan);
-    animation: blink 1.05s steps(1) infinite;
-}
-
-@keyframes blink {
-    50% {
-        opacity: 0;
-    }
-}
-
 .rail {
     grid-area: rail;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-right: var(--edge) solid var(--dim);
     background: var(--black);
     overflow: hidden;
 }
@@ -188,17 +179,24 @@ body::after {
     overflow-y: auto;
     overflow-x: hidden;
     padding: 0.7rem;
-    scrollbar-width: thin;
-    scrollbar-color: var(--red) var(--black);
 }
 
 .tabs {
     grid-area: tabs;
     display: flex;
+    flex-wrap: nowrap;
     gap: 0.4rem;
     padding: 0.5rem 0.6rem;
     border-top: var(--edge) solid var(--dim);
     background: var(--black);
+}
+
+.tabstrip {
+    display: flex;
+    flex: 5;
+    min-width: 0;
+    gap: 0.4rem;
+    overflow-x: auto;
 }
 
 .tab {
@@ -274,10 +272,10 @@ body::after {
 
 .result .src span {
     position: absolute;
-    top: 50%;
+    bottom: 0.25rem;
     left: 50%;
     writing-mode: vertical-rl;
-    transform: translate(-50%, -50%) rotate(180deg);
+    transform: translateX(-50%) rotate(180deg);
     max-height: calc(100% - 0.5rem);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -306,19 +304,6 @@ body::after {
     gap: 0.8rem;
 }
 
-.result .title {
-    color: var(--cyan);
-    font-size: 1.02rem;
-    text-decoration: none;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.result:hover .title {
-    color: var(--yellow);
-}
-
 .result .idx {
     color: var(--dim);
     font-size: 0.8rem;
@@ -326,13 +311,18 @@ body::after {
 }
 
 .result .url {
-    margin-left: auto;
-    color: var(--green);
-    font-size: 0.78rem;
+    flex: 1;
+    min-width: 0;
+    color: var(--red);
+    font-size: 0.9rem;
+    text-decoration: none;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 48%;
+}
+
+.result:hover .url {
+    text-decoration: underline;
 }
 
 .result .desc {
@@ -508,10 +498,6 @@ body::after {
     padding-bottom: 0.3rem;
 }
 
-.frame.home .head .caret {
-    height: 1.4rem;
-}
-
 .tabs {
     position: relative;
 }
@@ -636,4 +622,36 @@ body::after {
 
 .panel .apply:hover {
     background: var(--cyan);
+}
+
+.tab .abbr {
+    display: none;
+}
+
+@media (max-width: 720px) {
+    .tabs {
+        gap: 0.3rem;
+        padding: 0.45rem 0.5rem;
+    }
+
+    .tab {
+        flex: 0 0 auto;
+        letter-spacing: 0.12em;
+    }
+
+    .tab.filters {
+        flex: 0 0 auto;
+    }
+
+    .tab .full {
+        display: none;
+    }
+
+    .tab .abbr {
+        display: inline;
+    }
+
+    .panel .key {
+        flex: 0 0 6rem;
+    }
 }

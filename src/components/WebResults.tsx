@@ -1,7 +1,13 @@
-import { hostOf, proxiedImage, type WebResult } from "@/lib/fourget";
+import { proxiedImage, type WebResult } from "@/lib/fourget";
 
 function pad(index: number): string {
     return String(index + 1).padStart(2, "0");
+}
+
+function shortTitle(title: string): string {
+    const head = title.split(/\s+(?:[|–—·]|-|::)\s+/)[0] ?? title;
+    const trimmed = head.trim() || title.trim();
+    return trimmed.length > 28 ? `${trimmed.slice(0, 27).trimEnd()}…` : trimmed;
 }
 
 export default function WebResults({ results }: { results: WebResult[] }) {
@@ -13,8 +19,8 @@ export default function WebResults({ results }: { results: WebResult[] }) {
         <>
             {results.map((result, index) => (
                 <article className="result" key={`${result.url}-${index}`}>
-                    <div className="src">
-                        <span>{hostOf(result.url)}</span>
+                    <div className="src" title={result.title}>
+                        <span>{shortTitle(result.title)}</span>
                     </div>
                     {result.thumb?.url ? (
                         <span
@@ -28,13 +34,12 @@ export default function WebResults({ results }: { results: WebResult[] }) {
                         <div className="line">
                             <span className="idx">{pad(index)}</span>
                             <a
-                                className="title"
+                                className="url"
                                 href={result.url}
                                 rel="noreferrer noopener"
                             >
-                                {result.title}
+                                {result.url}
                             </a>
-                            <span className="url">{result.url}</span>
                         </div>
                         {result.description ? (
                             <p className="desc">{result.description}</p>

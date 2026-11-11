@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import Filters from "@/components/Filters";
+import Label from "@/components/Label";
 import type { FilterDef } from "@/lib/filters";
 import { DEFAULT_SCRAPER, type Vertical } from "@/lib/fourget";
 
@@ -13,12 +14,12 @@ export interface Telemetry {
 
 const WIRED: Vertical[] = ["web", "images"];
 
-const TABS: { vertical: Vertical; label: string; href: string }[] = [
-    { vertical: "web", label: "WEB", href: "/search" },
-    { vertical: "images", label: "IMAGES", href: "/images" },
-    { vertical: "videos", label: "VIDEOS", href: "/videos" },
-    { vertical: "music", label: "MUSIC", href: "/music" },
-    { vertical: "news", label: "NEWS", href: "/news" },
+const TABS: { vertical: Vertical; label: string; abbr: string; href: string }[] = [
+    { vertical: "web", label: "WEB", abbr: "WEB", href: "/search" },
+    { vertical: "images", label: "IMAGES", abbr: "IMG", href: "/images" },
+    { vertical: "videos", label: "VIDEOS", abbr: "VID", href: "/videos" },
+    { vertical: "music", label: "MUSIC", abbr: "MUS", href: "/music" },
+    { vertical: "news", label: "NEWS", abbr: "NWS", href: "/news" },
 ];
 
 function Rail({ telemetry }: { telemetry: Telemetry | null }) {
@@ -90,7 +91,6 @@ export default function Shell({
 
             <div className="head">
                 <span className="sigil">4G//NET</span>
-                <span className="caret" />
                 <input
                     name="q"
                     defaultValue={query}
@@ -107,25 +107,27 @@ export default function Shell({
 
             <div className="tabs">
                 <Filters defs={filterDefs} active={active} scraper={scraper} />
-                {TABS.map((tab) => {
-                    const className = `tab${tab.vertical === vertical ? " on" : ""}`;
-                    if (!WIRED.includes(tab.vertical)) {
+                <div className="tabstrip">
+                    {TABS.map((tab) => {
+                        const className = `tab${tab.vertical === vertical ? " on" : ""}`;
+                        if (!WIRED.includes(tab.vertical)) {
+                            return (
+                                <span key={tab.vertical} className={`${className} off`}>
+                                    <Label full={tab.label} abbr={tab.abbr} />
+                                </span>
+                            );
+                        }
                         return (
-                            <span key={tab.vertical} className={`${className} off`}>
-                                {tab.label}
-                            </span>
+                            <Link
+                                key={tab.vertical}
+                                className={className}
+                                href={carry(tab.href)}
+                            >
+                                <Label full={tab.label} abbr={tab.abbr} />
+                            </Link>
                         );
-                    }
-                    return (
-                        <Link
-                            key={tab.vertical}
-                            className={className}
-                            href={carry(tab.href)}
-                        >
-                            {tab.label}
-                        </Link>
-                    );
-                })}
+                    })}
+                </div>
             </div>
         </form>
     );
