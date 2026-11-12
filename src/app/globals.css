@@ -652,6 +652,23 @@ body::after {
         --cnr: 30px;
     }
 
+    .frame:not(.home) .head {
+        justify-content: flex-start;
+        padding-left: var(--cnr-clear);
+        padding-right: var(--cnr-clear);
+    }
+
+    .frame:not(.home) .head .sigil {
+        position: static;
+        transform: none;
+    }
+
+    .frame:not(.home) .head input {
+        max-width: 100%;
+        text-align: left;
+        font-size: 1.25rem;
+    }
+
     .tabs {
         gap: 0.3rem;
         padding: 0.45rem var(--cnr-clear);
