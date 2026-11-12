@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import Filters from "@/components/Filters";
 import Label from "@/components/Label";
 import type { FilterDef } from "@/lib/filters";
-import { DEFAULT_SCRAPER, type Vertical } from "@/lib/fourget";
+import { defaultScraperFor, scrapersFor, type Vertical } from "@/lib/fourget";
 
 export interface Telemetry {
     elapsedMs: number;
@@ -12,8 +12,6 @@ export interface Telemetry {
     bytes: number;
 }
 
-const WIRED: Vertical[] = ["web", "images"];
-
 const TABS: { vertical: Vertical; label: string; abbr: string; href: string }[] = [
     { vertical: "web", label: "WEB", abbr: "WEB", href: "/search" },
     { vertical: "images", label: "IMAGES", abbr: "IMG", href: "/images" },
@@ -21,6 +19,14 @@ const TABS: { vertical: Vertical; label: string; abbr: string; href: string }[] 
     { vertical: "music", label: "MUSIC", abbr: "MUS", href: "/music" },
     { vertical: "news", label: "NEWS", abbr: "NWS", href: "/news" },
 ];
+
+const ACTIONS: Record<Vertical, string> = {
+    web: "/search",
+    images: "/images",
+    videos: "/videos",
+    music: "/music",
+    news: "/news",
+};
 
 function Rail({ telemetry }: { telemetry: Telemetry | null }) {
     if (!telemetry) {
@@ -54,7 +60,7 @@ export default function Shell({
     vertical,
     query,
     telemetry,
-    scraper = DEFAULT_SCRAPER,
+    scraper,
     filterDefs = [],
     active = {},
     home = false,
@@ -69,13 +75,13 @@ export default function Shell({
     home?: boolean;
     children?: ReactNode;
 }) {
-    const action = vertical === "images" ? "/images" : "/search";
+    const current = scraper ?? defaultScraperFor(vertical);
 
     const carry = (href: string) => {
         if (!query) {
             return href;
         }
-        const params = new URLSearchParams({ q: query, scraper });
+        const params = new URLSearchParams({ q: query });
         for (const [key, value] of Object.entries(active)) {
             params.set(key, value);
         }
@@ -83,7 +89,11 @@ export default function Shell({
     };
 
     return (
-        <form className={home ? "frame home" : "frame"} action={action} method="get">
+        <form
+            className={home ? "frame home" : "frame"}
+            action={ACTIONS[vertical]}
+            method="get"
+        >
             <i className="cnr tl" />
             <i className="cnr tr" />
             <i className="cnr bl" />
@@ -106,27 +116,22 @@ export default function Shell({
             {home ? null : <div className="results">{children}</div>}
 
             <div className="tabs">
-                <Filters defs={filterDefs} active={active} scraper={scraper} />
+                <Filters
+                    defs={filterDefs}
+                    active={active}
+                    scraper={current}
+                    scrapers={scrapersFor(vertical)}
+                />
                 <div className="tabstrip">
-                    {TABS.map((tab) => {
-                        const className = `tab${tab.vertical === vertical ? " on" : ""}`;
-                        if (!WIRED.includes(tab.vertical)) {
-                            return (
-                                <span key={tab.vertical} className={`${className} off`}>
-                                    <Label full={tab.label} abbr={tab.abbr} />
-                                </span>
-                            );
-                        }
-                        return (
-                            <Link
-                                key={tab.vertical}
-                                className={className}
-                                href={carry(tab.href)}
-                            >
-                                <Label full={tab.label} abbr={tab.abbr} />
-                            </Link>
-                        );
-                    })}
+                    {TABS.map((tab) => (
+                        <Link
+                            key={tab.vertical}
+                            className={`tab${tab.vertical === vertical ? " on" : ""}`}
+                            href={carry(tab.href)}
+                        >
+                            <Label full={tab.label} abbr={tab.abbr} />
+                        </Link>
+                    ))}
                 </div>
             </div>
         </form>

@@ -333,6 +333,23 @@ body::after {
     text-decoration: underline;
 }
 
+.result .meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    margin-top: 0.28rem;
+    color: var(--dim);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.result .meta i {
+    font-style: normal;
+    color: var(--red);
+    padding: 0 0.4rem;
+}
+
 .result .desc {
     margin: 0.3rem 0 0;
     color: #c9b7b9;
@@ -468,11 +485,6 @@ body::after {
     font-size: 0.9rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-}
-
-.tab.off {
-    opacity: 0.35;
-    cursor: default;
 }
 
 .result .thumb {

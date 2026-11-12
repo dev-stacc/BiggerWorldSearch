@@ -1,15 +1,17 @@
 import Shell from "@/components/Shell";
 import { filtersFor } from "@/lib/filters";
-import { DEFAULT_SCRAPER } from "@/lib/fourget";
+import { defaultScraperFor } from "@/lib/fourget";
 
 export default function Home() {
+    const scraper = defaultScraperFor("web");
+
     return (
         <Shell
             vertical="web"
             query=""
             telemetry={null}
-            scraper={DEFAULT_SCRAPER}
-            filterDefs={filtersFor("web", DEFAULT_SCRAPER)}
+            scraper={scraper}
+            filterDefs={filtersFor("web", scraper)}
             home
         />
     );

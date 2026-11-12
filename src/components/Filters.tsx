@@ -1,15 +1,16 @@
 import Label from "@/components/Label";
-import { SCRAPERS } from "@/lib/fourget";
 import type { FilterDef } from "@/lib/filters";
 
 export default function Filters({
     defs,
     active,
     scraper,
+    scrapers,
 }: {
     defs: FilterDef[];
     active: Record<string, string>;
     scraper: string;
+    scrapers: readonly string[];
 }) {
     return (
         <details className="tab filters">
@@ -20,7 +21,7 @@ export default function Filters({
                 <div className="row">
                     <span className="key">ENGINE</span>
                     <div className="vals">
-                        {SCRAPERS.map((name) => (
+                        {scrapers.map((name) => (
                             <label
                                 key={name}
                                 className={name === scraper ? "pick on" : "pick"}

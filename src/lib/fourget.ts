@@ -3,24 +3,59 @@ export const FOURGET_BASE =
 
 export const DEFAULT_SCRAPER = process.env.FOURGET_SCRAPER ?? "ddg";
 
-export const SCRAPERS = [
-    "ddg",
-    "brave",
-    "startpage",
-    "marginalia",
-    "wiby",
-    "mwmbl",
-] as const;
-
-export type Scraper = (typeof SCRAPERS)[number];
-
 export const VERTICALS = ["web", "images", "videos", "news", "music"] as const;
 
 export type Vertical = (typeof VERTICALS)[number];
 
+export const SCRAPERS_BY_VERTICAL = {
+    web: ["ddg", "brave", "startpage", "marginalia", "wiby", "mwmbl"],
+    images: ["ddg", "brave", "startpage"],
+    videos: [
+        "ddg",
+        "brave",
+        "yt",
+        "vimeo",
+        "sepiasearch",
+        "startpage",
+        "yandex",
+        "naver",
+        "coccoc",
+        "purili",
+        "solofield",
+        "yahoo_japan",
+    ],
+    news: ["ddg", "brave", "yahoo_japan"],
+    music: ["sc"],
+} as const satisfies Record<Vertical, readonly string[]>;
+
+export type Scraper = (typeof SCRAPERS_BY_VERTICAL)[Vertical][number];
+
+export function scrapersFor(vertical: Vertical): readonly string[] {
+    return SCRAPERS_BY_VERTICAL[vertical];
+}
+
+export function defaultScraperFor(vertical: Vertical): string {
+    const list = scrapersFor(vertical);
+    return list.includes(DEFAULT_SCRAPER)
+        ? DEFAULT_SCRAPER
+        : (list[0] ?? DEFAULT_SCRAPER);
+}
+
+export function resolveScraper(vertical: Vertical, requested: string): string {
+    return scrapersFor(vertical).includes(requested)
+        ? requested
+        : defaultScraperFor(vertical);
+}
+
 export interface Thumb {
     ratio: string | null;
     url: string | null;
+}
+
+export interface Author {
+    name: string | null;
+    url: string | null;
+    avatar: string | null;
 }
 
 export interface Sublink {
@@ -52,13 +87,50 @@ export interface ImageResult {
     url: string;
 }
 
+export interface VideoResult {
+    title: string;
+    description: string | null;
+    author: Author;
+    date: number | null;
+    duration: number | null;
+    views: number | null;
+    thumb: Thumb;
+    url: string;
+}
+
+export interface NewsResult {
+    title: string;
+    author: string | null;
+    description: string | null;
+    date: number | null;
+    thumb: Thumb;
+    url: string;
+}
+
+export interface SongResult {
+    title: string;
+    description: string | null;
+    author: Author;
+    date: number | null;
+    duration: number | null;
+    views: number | null;
+    thumb: Thumb;
+    url: string;
+}
+
 export interface Envelope {
     status: string;
     npt: string | null;
     web?: WebResult[];
     image?: ImageResult[];
-    video?: unknown[];
-    news?: unknown[];
+    video?: VideoResult[];
+    reel?: VideoResult[];
+    livestream?: VideoResult[];
+    news?: NewsResult[];
+    song?: SongResult[];
+    playlist?: SongResult[];
+    album?: SongResult[];
+    podcast?: SongResult[];
     answer?: unknown[];
     related?: string[];
     spelling?: unknown;
@@ -82,7 +154,7 @@ export async function search(
     query: SearchQuery,
 ): Promise<SearchOutcome> {
     const params = new URLSearchParams({ s: query.s });
-    params.set("scraper", query.scraper ?? DEFAULT_SCRAPER);
+    params.set("scraper", query.scraper ?? defaultScraperFor(vertical));
     if (query.npt) {
         params.set("npt", query.npt);
     }
@@ -145,5 +217,48 @@ export function hostOf(url: string): string {
         return new URL(url).hostname.replace(/^www\./, "");
     } catch {
         return url;
+    }
+}
+
+export function formatDuration(seconds: number | null): string | null {
+    if (seconds === null || !Number.isFinite(seconds) || seconds <= 0) {
+        return null;
+    }
+    const total = Math.round(seconds);
+    const hours = Math.floor(total / 3600);
+    const minutes = Math.floor((total % 3600) / 60);
+    const secs = total % 60;
+    const pad = (value: number) => String(value).padStart(2, "0");
+    return hours > 0
+        ? `${hours}:${pad(minutes)}:${pad(secs)}`
+        : `${minutes}:${pad(secs)}`;
+}
+
+export function formatCount(value: number | null): string | null {
+    if (value === null || !Number.isFinite(value) || value < 0) {
+        return null;
+    }
+    if (value >= 1_000_000) {
+        return `${(value / 1_000_000).toFixed(1).replace(/\.0$/, "")}M`;
+    }
+    if (value >= 1_000) {
+        return `${(value / 1_000).toFixed(1).replace(/\.0$/, "")}K`;
+    }
+    return String(value);
+}
+
+export function formatDate(unix: number | null): string | null {
+    if (unix === null || !Number.isFinite(unix) || unix <= 0) {
+        return null;
+    }
+    return new Date(unix * 1000).toISOString().slice(0, 10);
+}
+
+export function isLinkable(url: string): boolean {
+    try {
+        const parsed = new URL(url);
+        return parsed.protocol === "http:" || parsed.protocol === "https:";
+    } catch {
+        return false;
     }
 }
