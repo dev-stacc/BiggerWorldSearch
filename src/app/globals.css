@@ -145,7 +145,7 @@ body::after {
     background: transparent;
     color: var(--white);
     font-family: var(--fg-display);
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     letter-spacing: 0.04em;
     caret-color: var(--cyan);
 }
@@ -513,6 +513,7 @@ body::after {
 .frame.home .head input {
     flex: 0 1 40rem;
     max-width: 100%;
+    font-size: 1.5rem;
     border-bottom: var(--edge) solid var(--dim);
     padding: 0 0 0.3rem;
 }
@@ -666,7 +667,6 @@ body::after {
     .frame:not(.home) .head input {
         max-width: 100%;
         text-align: left;
-        font-size: 1.25rem;
     }
 
     .tabs {
