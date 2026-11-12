@@ -653,6 +653,10 @@ body::after {
         --cnr: 30px;
     }
 
+    .frame.news .result .thumb {
+        display: none;
+    }
+
     .frame:not(.home) .head {
         justify-content: flex-start;
         padding-left: var(--cnr-clear);

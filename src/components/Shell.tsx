@@ -90,7 +90,7 @@ export default function Shell({
 
     return (
         <form
-            className={home ? "frame home" : "frame"}
+            className={home ? "frame home" : `frame ${vertical}`}
             action={ACTIONS[vertical]}
             method="get"
         >
