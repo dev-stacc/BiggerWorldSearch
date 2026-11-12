@@ -12,6 +12,8 @@
     --gutter: 0.9rem;
     --rail: 2.1rem;
     --chamfer: 9px;
+    --cnr: 60px;
+    --cnr-clear: calc(var(--cnr) + 0.5rem);
 
     --fg-display: "Neuromax", sans-serif;
     --fg-prose: "Departure Mono", monospace;
@@ -74,28 +76,16 @@ body::after {
 
 .cnr {
     position: absolute;
-    width: 30px;
-    height: 30px;
+    width: var(--cnr);
+    height: var(--cnr);
     z-index: 30;
-    border: 2px solid var(--cyan);
-    pointer-events: none;
-}
-
-.cnr::after {
-    content: "";
-    position: absolute;
-    inset: 6px;
     border: 2px solid var(--red);
+    pointer-events: none;
 }
 
 .cnr.tl {
     top: 0;
     left: 0;
-    border-right: 0;
-    border-bottom: 0;
-}
-
-.cnr.tl::after {
     border-right: 0;
     border-bottom: 0;
 }
@@ -107,11 +97,6 @@ body::after {
     border-bottom: 0;
 }
 
-.cnr.tr::after {
-    border-left: 0;
-    border-bottom: 0;
-}
-
 .cnr.bl {
     bottom: 0;
     left: 0;
@@ -119,19 +104,9 @@ body::after {
     border-top: 0;
 }
 
-.cnr.bl::after {
-    border-right: 0;
-    border-top: 0;
-}
-
 .cnr.br {
     bottom: 0;
     right: 0;
-    border-left: 0;
-    border-top: 0;
-}
-
-.cnr.br::after {
     border-left: 0;
     border-top: 0;
 }
@@ -150,7 +125,7 @@ body::after {
 
 .head .sigil {
     position: absolute;
-    left: 2.4rem;
+    left: var(--cnr-clear);
     top: 50%;
     transform: translateY(-50%);
     font-family: var(--fg-display);
@@ -221,7 +196,7 @@ body::after {
     display: flex;
     flex-wrap: nowrap;
     gap: 0.4rem;
-    padding: 0.5rem 2.4rem;
+    padding: 0.5rem var(--cnr-clear);
     border-top: var(--edge) solid var(--dim);
     background: var(--black);
 }
@@ -580,8 +555,8 @@ body::after {
 
 .panel {
     position: absolute;
-    left: 2.4rem;
-    right: 2.4rem;
+    left: var(--cnr-clear);
+    right: var(--cnr-clear);
     bottom: calc(100% + 0.4rem);
     z-index: 40;
     max-height: 52vh;
@@ -673,9 +648,13 @@ body::after {
 }
 
 @media (max-width: 720px) {
+    :root {
+        --cnr: 30px;
+    }
+
     .tabs {
         gap: 0.3rem;
-        padding: 0.45rem 0.5rem;
+        padding: 0.45rem var(--cnr-clear);
     }
 
     .tab {
