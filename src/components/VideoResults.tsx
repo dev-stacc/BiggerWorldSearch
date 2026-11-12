@@ -23,7 +23,6 @@ export default function VideoResults({ results }: { results: VideoResult[] }) {
                             views ? `${views} VIEWS` : null,
                             formatDate(result.date),
                         ]}
-                        description={result.description}
                     />
                 );
             })}

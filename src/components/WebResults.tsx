@@ -14,7 +14,6 @@ export default function WebResults({ results }: { results: WebResult[] }) {
                     index={index}
                     title={result.title}
                     url={result.url}
-                    thumb={result.thumb?.url}
                     description={result.description}
                 />
             ))}

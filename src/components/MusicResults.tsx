@@ -23,7 +23,6 @@ export default function MusicResults({ results }: { results: SongResult[] }) {
                             plays ? `${plays} PLAYS` : null,
                             formatDate(result.date),
                         ]}
-                        description={result.description}
                     />
                 );
             })}
